@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CatsController } from './cats/cats.controller';
+import { CatsService } from './cats/cats.service';
 import configuration from './config/configuration';
 
 @Module({
@@ -11,7 +13,7 @@ import configuration from './config/configuration';
       load: [configuration],
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CatsController],
+  providers: [AppService, CatsService],
 })
 export class AppModule {}
