@@ -1,15 +1,3 @@
-import { environment } from "../environment";
-const pgp = require("pg-promise")();
-
-const cn = {
-  host: environment.DBHOST,
-  port: environment.DBPORT,
-  database: environment.DBNAME,
-  user: environment.DBUSER,
-  password: environment.DBPASS,
-  max: 30, // use up to 30 connections
-};
-
 export type Cat = {
   id: string;
   name: string;
@@ -17,11 +5,9 @@ export type Cat = {
   breed: string;
 };
 
-const db = pgp(cn);
-
-export async function getAllCats() {
+export async function getAllCats(db: any) {
   let data: Cat[] = [];
-  const sql = "SELECT id, name, age, breed from cat";
+  const sql = "SELECT id, name, age, breed from cats";
 
   try {
     data = await db.any(sql);
