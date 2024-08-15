@@ -1,12 +1,14 @@
-import express, { Request, Response } from "express";
+import express, {Express, Request, Response } from "express";
 
-const app = express();
+const app: Express = express();
 const port = 3000;
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
   res.send("Hello World from Typescript!");
 });
 
-app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+export default app
