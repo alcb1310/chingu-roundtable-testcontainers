@@ -1,3 +1,5 @@
+import pg from "pg";
+
 export type Cat = {
   id: string;
   name: string;
@@ -5,13 +7,13 @@ export type Cat = {
   breed: string;
 };
 
-export async function getAllCats(db: any) {
+export async function getAllCats(db: pg.Client) {
   let data: Cat[] = [];
-  const sql = "SELECT id, name, age, breed from cats";
+  const sql = "SELECT id, name, age, breed from cat";
 
   try {
-    data = await db.any(sql);
-    console.dir(data);
+    const result = await db.query(sql);
+    data = result.rows
   } catch (error) {
     console.error(error);
   }
