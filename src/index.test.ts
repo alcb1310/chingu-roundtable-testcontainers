@@ -1,8 +1,17 @@
 import request from "supertest";
+import { Client } from "pg";
 import app, { server } from "./index";
 import { getAllCats } from "./db/cats";
 
-jest.mock("./db/cats");
+jest.mock("pg", () => {
+  const mockClient = {
+    connect: jest.fn(),
+    query: jest.fn(),
+    end: jest.fn(),
+  };
+
+  return { Client: jest.fn(() => mockClient) };
+});
 
 describe("GET /", () => {
   it("should return 200", async () => {
@@ -12,21 +21,25 @@ describe("GET /", () => {
 });
 
 describe("GET /cats", () => {
+  let client: Client = new Client();
+
   it("should return the cats", async () => {
-    (getAllCats as jest.Mock).mockResolvedValue([
-      {
-        id: 1,
-        name: "Garfield",
-        age: 2,
-        breed: "street",
-      },
-      {
-        id: 2,
-        name: "Sylvester",
-        age: 5,
-        breed: "tabby",
-      },
-    ]);
+    (client.query as jest.Mock).mockResolvedValue({
+      rows: [
+        {
+          id: 1,
+          name: "Garfield",
+          age: 2,
+          breed: "street",
+        },
+        {
+          id: 2,
+          name: "Sylvester",
+          age: 5,
+          breed: "tabby",
+        },
+      ],
+    })
 
     const response = await request(app).get("/cats");
     expect(response.statusCode).toEqual(200);
